@@ -22,16 +22,23 @@ namespace WebApplication2.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] TodoUser user)
         {
-            try
-            {
-                _context.TodoUsers.Add(user);
-                await _context.SaveChangesAsync();
-                return Ok(user);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error: {ex.Message}");
-            }
+            var connection = _context.Database.GetDbConnection();
+            await connection.OpenAsync();
+
+            using var command = connection.CreateCommand();
+            command.CommandText = "sp_InsertUser";
+            command.CommandType = CommandType.StoredProcedure;
+
+            command.Parameters.Add(new SqlParameter("@Name", user.Name ?? (object)DBNull.Value));
+            command.Parameters.Add(new SqlParameter("@Email", user.Email ?? (object)DBNull.Value));
+
+            var newUserIdParam = new SqlParameter("@NewUserId", SqlDbType.BigInt) { Direction = ParameterDirection.Output };
+            command.Parameters.Add(newUserIdParam);
+
+            await command.ExecuteNonQueryAsync();
+            long newUserId = (long)newUserIdParam.Value;
+
+            return Ok(new { Id = newUserId, user.Name, user.Email });
         }
 
 
