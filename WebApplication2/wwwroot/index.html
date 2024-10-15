@@ -5,7 +5,7 @@
     <title>Prueba</title>
 </head>
 <body>
-    <p>PRUEBA</p>
+    <p>Fobinacci</p>
 
     <h1>Calculadora de Fibonacci</h1>
     <input type="number" id="inputN" placeholder="Ingrese un número" />
@@ -13,6 +13,31 @@
 
     <h2>Resultado:</h2>
     <pre id="result"></pre>
+
+    <p>Agregar Usuario</p>
+
+    <form onsubmit="addUsers(); return false;">
+        <input type="text" id="add-name" placeholder="Ingresa el nombre" required/>
+        <input type="email" id="add-email" placeholder="Ingresa el correo electronico" required/>
+        <input type="submit" value="Registrar"/>
+    </form>
+
+    <div>
+        <table>
+            <tr>
+                <th>Nombre</th>
+                <th>Correo electronico</th>
+                <th>Accciones</th>
+            </tr>
+            <tbody id="todosUsers"></tbody>
+        </table>
+
+        <p id="counter"></p>
+    </div>
+
     <script src="js/site.js"></script>
+    <script>
+        getUsers();
+    </script>
 </body>
 </html>
